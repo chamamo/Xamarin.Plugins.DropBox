@@ -83,8 +83,14 @@ namespace DropBoxSample.Droid
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f050001
+			public const int Item = 2131034113;
+			
 			// aapt resource value: 0x7f050000
 			public const int MvxBindingTagUnique = 2131034112;
+			
+			// aapt resource value: 0x7f050002
+			public const int Numero = 2131034114;
 			
 			static Id()
 			{
@@ -103,7 +109,10 @@ namespace DropBoxSample.Droid
 			public const int FirstView = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int SplashScreen = 2130903041;
+			public const int ItemListItem = 2130903041;
+			
+			// aapt resource value: 0x7f030002
+			public const int SplashScreen = 2130903042;
 			
 			static Layout()
 			{

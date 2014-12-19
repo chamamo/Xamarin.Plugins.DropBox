@@ -14,9 +14,62 @@
         android:layout_height="wrap_content"
         android:textSize="40dp"
         local:MvxBind="Text Hello" />
-    <Button
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="SYnc"
-        local:MvxBind="Click SyncCommand" />
+        android:orientation="horizontal"
+        android:layout_weight="2">
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                local:MvxBind="Click Collection1.AddCommand" />
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Sync"
+                local:MvxBind="Click Collection1.SyncCommand" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                local:MvxBind="Text Collection1.SelectedItem.Value" />
+            <Mvx.MvxListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                local:MvxBind="ItemsSource Collection1.Items; SelectedItem SelectedItem"
+                local:MvxItemTemplate="@layout/itemlistitem" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                local:MvxBind="Click Collection2.AddCommand" />
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Sync"
+                local:MvxBind="Click Collection2.SyncCommand" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                local:MvxBind="Text Collection2.SelectedItem.Value" />
+            <Mvx.MvxListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                local:MvxBind="ItemsSource Collection1.Items; SelectedItem SelectedItem"
+                local:MvxItemTemplate="@layout/itemlistitem" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
