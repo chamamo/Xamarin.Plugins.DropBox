@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Runtime;
+using Android.Views;
+using Android.Widget;
+using DropboxSync.Android;
+
+namespace Cham.MvvmCross.Plugins.DropBox.Droid
+{
+    public class MvxDBTable<T> : MvxDBTableBase<T>, IMvxDBTable<T> where T : IMvxDBEntity
+    {
+        public readonly DBTable DBTable;
+
+        public MvxDBTable(DBTable table, IMvxDBDataStore store)
+            : base(store)
+        {
+            DBTable = table;
+        }
+
+        public IEnumerable<Dictionary<string, object>> Query(Dictionary<string, object> query)
+        {
+           var dbFields = query.ToDBFields();
+           var result = DBTable.Query(dbFields);
+           foreach (var record in result.AsList())
+           {
+               yield return record.ToDictionary(MvxDBMapping.Get<T>());
+           }
+        }
+
+        public override void AddOrUpdate(T entity, string id, bool autoSync = true)
+        {
+            DBTable.GetOrInsert(id, entity.GetDBFields<T>());
+        }
+
+        public override void Delete(T entity, string id, bool autoSync = true)
+        {
+            var record = DBTable.Get(id);
+            if (record != null)
+            {
+                record.DeleteRecord();
+                Store.Sync();
+            }
+        }
+    }
+}
