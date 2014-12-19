@@ -53,7 +53,7 @@
       <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Messenger.3.2.2\lib\MonoAndroid\Cirrious.MvvmCross.Plugins.Messenger.dll</HintPath>
     </Reference>
     <Reference Include="DropboxSync.Android">
-      <HintPath>E:\Dev\dropboxsync-3.1.0\dropboxsync-3.1.0\lib\android\DropboxSync.Android.dll</HintPath>
+      <HintPath>..\lib\android\DropboxSync.Android.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
@@ -72,6 +72,9 @@
     <Reference Include="System.Xml.Serialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MvvmCross.PortableSupport.3.2.2\lib\MonoAndroid\System.Xml.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\lib\android\Xamarin.Android.Support.v4.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
