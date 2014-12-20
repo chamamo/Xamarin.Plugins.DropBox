@@ -11,7 +11,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
     {
         public void Load()
         {
-            Mvx.RegisterSingleton<IMvxDBDataStore>(new MvxDBDataStore());
+            Mvx.RegisterSingleton<IMvxDBDataStore>(() => new MvxDBDataStore());
         }
-    } 
+    }
 }

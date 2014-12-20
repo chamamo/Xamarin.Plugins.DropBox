@@ -23,10 +23,13 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
 
         private DBAccountManager Account { get; set; }
 
+        public override bool HasLinkedAccount { get { return Account!=null? Account.HasLinkedAccount : false; } }
+
         private DBDatastore DropboxDatastore { get; set; }
 
         public override void Sync()
         {
+            if (DropboxDatastore == null) return;
             var changes = DropboxDatastore.Sync();
             if (changes != null && changes.Count > 0)
             {
@@ -35,12 +38,15 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
                 foreach (var change in changes)
                 {
                     var map = MvxDBMapping.Get(change.Key);
+                    if (map == null) continue;
                     Type[] typeArgs = { map.Type };
                     var makeme = messageType.MakeGenericType(typeArgs);
                     foreach (var record in change.Value)
                     {
 
-                        var m = (record.IsDeleted ? Activator.CreateInstance(makeme, true) : Activator.CreateInstance(makeme, record.ToDictionary(map))) as MvxMessage;
+                        var m = (record.IsDeleted ? 
+                            Activator.CreateInstance(makeme, this, record.Id, true) : 
+                            Activator.CreateInstance(makeme, this, record.Id, record.ToDictionary(map))) as MvxMessage;
                         messenger.Publish(m, makeme);
                     }
                 }

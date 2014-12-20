@@ -35,7 +35,8 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
 
         public override void AddOrUpdate(T entity, string id, bool autoSync = true)
         {
-            DBTable.GetOrInsert(id, entity.GetDBFields<T>());
+            var dbFields = entity.GetDBFields<T>();
+            DBTable.GetOrInsert(id, dbFields);
         }
 
         public override void Delete(T entity, string id, bool autoSync = true)

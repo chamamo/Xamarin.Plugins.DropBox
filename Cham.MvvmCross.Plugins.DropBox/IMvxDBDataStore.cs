@@ -10,6 +10,8 @@ namespace Cham.MvvmCross.Plugins.DropBox
 {
     public interface IMvxDBDataStore
     {
+        bool HasLinkedAccount { get; }
+
         IMvxDBTable<T> GetTable<T>(string tableName) where T : IMvxDBEntity;
 
         IMvxDBTable<T> GetTable<T>() where T : IMvxDBEntity;

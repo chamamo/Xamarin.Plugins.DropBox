@@ -17,5 +17,5 @@
         android:textStyle="bold"
         android:text="Value"
         local:MvxBind="Text Value"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 </FrameLayout>

@@ -63,6 +63,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
                         var date = record.GetDate(fieldName);
                         value =  date.ToDateTime();
                     }
+                    else if (type == typeof(string)) value = record.GetString(fieldName);
                     else
                     {
                         throw new NotImplementedException();

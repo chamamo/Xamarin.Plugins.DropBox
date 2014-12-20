@@ -11,16 +11,19 @@ namespace Cham.MvvmCross.Plugins.DropBox.Messages
     {
         public readonly Dictionary<string, object>  Changes;
         public readonly bool IsDeleted;
+        public readonly string Id;
 
-        public DrbxReceivedMessage(string id, bool isDeleted)
-            : base(id)
+        public DrbxReceivedMessage(object sender, string id, bool isDeleted)
+            : base(sender)
         {
+            Id = id;
             IsDeleted = isDeleted;
         }
 
-        public DrbxReceivedMessage(string id, Dictionary<string, object> changes)
+        public DrbxReceivedMessage(object sender, string id, Dictionary<string, object> changes)
             : base(id)
         {
+            Id = id;
             Changes = changes;
         }
     }

@@ -22,9 +22,9 @@ namespace Cham.MvvmCross.Plugins.DropBox
                 TableName = attributes[0].Name;
             }
 
-            var query = type.GetTypeInfo().DeclaredProperties;
+            var query = RuntimeReflectionExtensions.GetRuntimeProperties(type);
             PropertyInfoKey = query.FirstOrDefault(p => p.GetCustomAttribute<MvxDBKeyAttribute>(true) != null);
-            query = query.Where(p => p.CanRead && p.CanWrite && p.GetCustomAttribute<MvxDBIgnoreAttribute>(true) != null);
+            query = query.Where(p => p.CanRead && p.CanWrite && p.GetCustomAttribute<MvxDBIgnoreAttribute>(true) == null);
             PropertiesInfos = query.ToList();
         }
 
