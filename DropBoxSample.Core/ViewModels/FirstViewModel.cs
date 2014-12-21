@@ -40,6 +40,7 @@ namespace DropBoxSample.Core.ViewModels
                         m.Record.Populate<Item>(ref model);
                         itemVM.Model = model;
                         itemVM.RaiseAllPropertiesChanged();
+                        if (SelectedItem.Model.Id == model.Id) SelectedItem.RaiseAllPropertiesChanged();
                     }
                     else
                     {
@@ -218,8 +219,10 @@ namespace DropBoxSample.Core.ViewModels
             {
                 return new MvxCommand(() =>
                     {
+                        bool isSelected = Parent.SelectedItem.Model.Id == Model.Id;
                         Table.Delete(Model);
                         Parent.Items.Remove(this);
+                        if (isSelected && Parent.Items.Count > 0) Parent.SelectedItem = Parent.Items[0];
                     });
             }
         }
