@@ -25,11 +25,11 @@ namespace Cham.MvvmCross.Plugins.DropBox
     {
         IMvxDBRecord Get(string id);
 
-        void GetOrInsert(T entity, string id, bool autoSync = true);
+        IMvxDBRecord GetOrInsert(T entity, string id, bool autoSync = true);
 
         void Delete(T entity, string id, bool autoSync = true);
 
-        void GetOrInsert(T entity, bool autoSync = true);
+        IMvxDBRecord GetOrInsert(T entity, bool autoSync = true);
 
         void Delete(T entity, bool autoSync = true);
 

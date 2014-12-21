@@ -46,11 +46,12 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             }
         }
 
-        public override void GetOrInsert(T entity, string id, bool autoSync = true)
+        public override IMvxDBRecord GetOrInsert(T entity, string id, bool autoSync = true)
         {
             var dbFields = entity.GetDBFields<T>();
-            DBTable.GetOrInsert(id, dbFields);
+            var record = DBTable.GetOrInsert(id, dbFields);
             if (autoSync) Store.Sync();
+            return record.ToMvxDBRecord();
         }
 
         public override void Delete(T entity, string id, bool autoSync = true)

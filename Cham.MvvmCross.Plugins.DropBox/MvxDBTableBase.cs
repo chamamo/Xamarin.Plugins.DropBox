@@ -17,17 +17,17 @@ namespace Cham.MvvmCross.Plugins.DropBox
 
         public abstract IMvxDBRecord Get(string id);
 
-        public abstract void GetOrInsert(T entity, string id, bool autoSync = true);
+        public abstract IMvxDBRecord GetOrInsert(T entity, string id, bool autoSync = true);
 
         public abstract void Delete(T entity, string id, bool autoSync = true);
 
-        public void GetOrInsert(T entity, bool autoSync = true)
+        public IMvxDBRecord GetOrInsert(T entity, bool autoSync = true)
         {
             var map = MvxDBMapping.Get(typeof(T));
             if (map.PropertyInfoKey == null) new KeyNotFoundException(string.Format("Type: {0} does not have MvxDBKey attribute", typeof(T).Name));
             var value = map.PropertyInfoKey.GetValue(entity);
             if (value == null) new NullReferenceException(string.Format("Type:{0}: Property key {1} is null", typeof(T).Name, map.PropertyInfoKey.Name));
-            GetOrInsert(entity, value.ToString(), autoSync);
+            return GetOrInsert(entity, value.ToString(), autoSync);
         }
 
         public void Delete(T entity, bool autoSync = true)

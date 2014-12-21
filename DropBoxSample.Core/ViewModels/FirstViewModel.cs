@@ -118,7 +118,7 @@ namespace DropBoxSample.Core.ViewModels
                 return new MvxCommand(() =>
                 {
                     var item = new Item() { Id = Guid.NewGuid().ToString(), Value = "new" };
-                    Table.AddOrUpdate(item);
+                    Table.GetOrInsert(item);
                     var itemVM = new ItemViewModel(item, this, _dataStore);
                     Items.Add(itemVM);
                     RaisePropertyChanged(() => Items);
