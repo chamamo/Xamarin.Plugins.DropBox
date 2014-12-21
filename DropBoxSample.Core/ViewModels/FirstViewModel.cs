@@ -39,6 +39,7 @@ namespace DropBoxSample.Core.ViewModels
                         var model = itemVM.Model;
                         m.Record.Populate<Item>(ref model);
                         itemVM.Model = model;
+                        itemVM.RaiseAllPropertiesChanged();
                     }
                     else
                     {
