@@ -205,7 +205,9 @@ namespace DropBoxSample.Core.ViewModels
                 if (Model.Value == value) return;
                 Model.Value = value;
                 RaisePropertyChanged(() => Value);
-                Table.AddOrUpdate(Model);
+                var record = Table.Get(Model.Id);
+                record["Value"] = value;
+                dataStore.Sync();
             }
         }
 

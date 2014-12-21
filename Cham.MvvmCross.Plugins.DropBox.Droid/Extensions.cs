@@ -76,6 +76,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
 
         public static MvxDBRecord ToMvxDBRecord(this DBRecord record)
         {
+            if (record == null) return null;
             var map = MvxDBMapping.Get(record.Table.Id);
             return new MvxDBRecord(record);
         }

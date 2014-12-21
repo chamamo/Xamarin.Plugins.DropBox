@@ -23,11 +23,13 @@ namespace Cham.MvvmCross.Plugins.DropBox
 
     public interface IMvxDBTable<T> where T : IMvxDBEntity
     {
-        void AddOrUpdate(T entity, string id, bool autoSync = true);
+        IMvxDBRecord Get(string id);
+
+        void GetOrInsert(T entity, string id, bool autoSync = true);
 
         void Delete(T entity, string id, bool autoSync = true);
 
-        void AddOrUpdate(T entity, bool autoSync = true);
+        void GetOrInsert(T entity, bool autoSync = true);
 
         void Delete(T entity, bool autoSync = true);
 

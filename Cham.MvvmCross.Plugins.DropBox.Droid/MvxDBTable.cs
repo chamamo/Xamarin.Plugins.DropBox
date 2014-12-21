@@ -23,6 +23,11 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             DBTable = table;
         }
 
+        public override IMvxDBRecord Get(string id)
+        {
+            return DBTable.Get(id).ToMvxDBRecord();
+        }
+
         public override IEnumerable<IMvxDBRecord> Query(Dictionary<string, object> query = null)
         {
             DropboxSync.Android.DBTable.QueryResult result = null;
@@ -41,7 +46,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             }
         }
 
-        public override void AddOrUpdate(T entity, string id, bool autoSync = true)
+        public override void GetOrInsert(T entity, string id, bool autoSync = true)
         {
             var dbFields = entity.GetDBFields<T>();
             DBTable.GetOrInsert(id, dbFields);
