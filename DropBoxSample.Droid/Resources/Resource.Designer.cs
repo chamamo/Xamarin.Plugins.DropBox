@@ -92,6 +92,9 @@ namespace DropBoxSample.Droid
 			// aapt resource value: 0x7f050002
 			public const int Numero = 2131034114;
 			
+			// aapt resource value: 0x7f050003
+			public const int generateButton = 2131034115;
+			
 			static Id()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

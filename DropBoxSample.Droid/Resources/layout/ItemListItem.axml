@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             local:MvxBind="Click DeleteCommand"
             android:layout_alignParentRight="true"
-            android:text="Delete"
-            android:background="@drawable/btn_generate" />
+            android:text="Delete" />
     </LinearLayout>
 </FrameLayout>
