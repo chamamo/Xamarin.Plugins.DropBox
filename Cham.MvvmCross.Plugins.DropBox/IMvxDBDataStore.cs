@@ -30,6 +30,8 @@ namespace Cham.MvvmCross.Plugins.DropBox
         void AddOrUpdate(T entity, bool autoSync = true);
 
         void Delete(T entity, bool autoSync = true);
+
+        IEnumerable<Dictionary<string, object>> Query(Dictionary<string, object> query = null);
     }
 
     

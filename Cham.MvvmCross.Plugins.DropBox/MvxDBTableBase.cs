@@ -36,5 +36,7 @@ namespace Cham.MvvmCross.Plugins.DropBox
             if (value == null) new NullReferenceException(string.Format("Type:{0}: Property key {1} is null", typeof(T).Name, map.PropertyInfoKey.Name));
             Delete(entity, value.ToString(), autoSync);
         }
+
+        public abstract IEnumerable<Dictionary<string, object>> Query(Dictionary<string, object> query = null);
     }
 }

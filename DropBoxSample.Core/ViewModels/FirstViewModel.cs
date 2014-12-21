@@ -77,17 +77,28 @@ namespace DropBoxSample.Core.ViewModels
             {
                 return new MvxCommand(() =>
                 {
-                    if (_dataStore.HasLinkedAccount)
-                    {
-                        _dataStore.Sync();
-                        var table = _dataStore.GetTable<Item>();
-                        foreach (var item in Items)
-                        {
-                            table.AddOrUpdate(item.Model, false);
-                        }
-                        _dataStore.Sync();
-                    }
+                    RefreshData();
                 });
+            }
+        }
+
+        private void RefreshData()
+        {
+            if (_dataStore.HasLinkedAccount)
+            {
+                Items.Clear();
+                var table = _dataStore.GetTable<Item>();
+                var results = table.Query();
+                if (results != null)
+                {
+                    foreach (var result in results)
+                    {
+                        Item item = new Item();
+                        result.Populate<Item>(ref item);
+                        Items.Add(new ItemViewModel(item, this, _dataStore));
+                    }
+                }
+                _dataStore.Sync();
             }
         }
 
@@ -136,6 +147,7 @@ namespace DropBoxSample.Core.ViewModels
         public void Refresh()
         {
             RaisePropertyChanged(() => Online);
+            RefreshData();
         }
     }
 
@@ -187,9 +199,16 @@ namespace DropBoxSample.Core.ViewModels
             }
         }
 
-        public ICommand ItemSelectedCommand
+        public ICommand DeleteCommand
         {
-            get { return new MvxCommand(() => Parent.SelectedItem = this); }
+            get
+            {
+                return new MvxCommand(() =>
+                    {
+                        Table.Delete(Model);
+                        Parent.Items.Remove(this);
+                    });
+            }
         }
     }
 
