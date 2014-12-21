@@ -45,6 +45,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
         {
             var dbFields = entity.GetDBFields<T>();
             DBTable.GetOrInsert(id, dbFields);
+            if (autoSync) Store.Sync();
         }
 
         public override void Delete(T entity, string id, bool autoSync = true)
@@ -53,7 +54,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             if (record != null)
             {
                 record.DeleteRecord();
-                Store.Sync();
+                if(autoSync) Store.Sync();
             }
         }
     }
