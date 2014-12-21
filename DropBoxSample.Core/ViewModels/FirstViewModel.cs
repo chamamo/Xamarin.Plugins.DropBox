@@ -40,7 +40,7 @@ namespace DropBoxSample.Core.ViewModels
                         m.Record.Populate<Item>(ref model);
                         itemVM.Model = model;
                         itemVM.RaiseAllPropertiesChanged();
-                        if (SelectedItem.Model.Id == model.Id) SelectedItem.RaiseAllPropertiesChanged();
+                        if (SelectedItem != null && SelectedItem.Model.Id == model.Id) SelectedItem.RaiseAllPropertiesChanged();
                     }
                     else
                     {
