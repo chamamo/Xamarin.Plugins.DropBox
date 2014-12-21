@@ -9,11 +9,16 @@
         android:layout_height="wrap_content"
         android:text="Connect"
         local:MvxBind="Click ConnectCommand; Visibility Online, Converter=InvertedVisibility" />
+    <CheckBox
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Auto sync"
+        local:MvxBind="Checked AutoSync; Visibility Online, Converter=Visibility" />
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Sync"
-        local:MvxBind="Click SyncCommand; Visibility Online, Converter=Visibility" />
+        local:MvxBind="Click SyncCommand; Visibility Online, Converter=Visibility; Enabled AutoSync, Converter=BoolInverted" />
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

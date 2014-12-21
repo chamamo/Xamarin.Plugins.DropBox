@@ -86,15 +86,15 @@ namespace DropBoxSample.Core.ViewModels
         }
 
 
-        private bool _autoRefresh;
-        public bool AutoRefresh
+        private bool _autoSync;
+        public bool AutoSync
         {
-            get { return _autoRefresh; }
+            get { return _autoSync; }
             set
             {
-                if (_autoRefresh == value) return;
-                _autoRefresh = value;
-                RaisePropertyChanged(() => AutoRefresh);
+                if (_autoSync == value) return;
+                _autoSync = value;
+                RaisePropertyChanged(() => AutoSync);
             }
         }
 
@@ -102,7 +102,7 @@ namespace DropBoxSample.Core.ViewModels
         {
             get
             {
-                return new MvxCommand(RefreshData, () => AutoRefresh);
+                return new MvxCommand(RefreshData);
             }
         }
 
@@ -132,7 +132,7 @@ namespace DropBoxSample.Core.ViewModels
                 return new MvxCommand(() =>
                 {
                     var item = new Item() { Id = Guid.NewGuid().ToString(), Value = "new" };
-                    Table.GetOrInsert(item);
+                    Table.GetOrInsert(item, AutoSync);
                     var itemVM = new ItemViewModel(item, this, _dataStore);
                     Items.Add(itemVM);
                     RaisePropertyChanged(() => Items);
@@ -221,7 +221,7 @@ namespace DropBoxSample.Core.ViewModels
                 RaisePropertyChanged(() => Value);
                 var record = Table.Get(Model.Id);
                 record["Value"] = value;
-                dataStore.Sync();
+                if (Parent.AutoSync) dataStore.Sync();
             }
         }
 
