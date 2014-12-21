@@ -63,15 +63,17 @@ namespace DropBoxSample.Core.ViewModels
             }
         }
 
+        private ICommand _connectCommand;
         public ICommand ConnectCommand
         {
             get
             {
-                return new MvxCommand(() =>
+                return _connectCommand ?? (_connectCommand = new MvxCommand(() =>
                 {
                     _dataStore.Init(DropboxSyncKey, DropboxSyncSecret);
                     RaisePropertyChanged(() => Online);
-                });
+                    RefreshData();
+                }));
             }
         }
 
@@ -83,14 +85,24 @@ namespace DropBoxSample.Core.ViewModels
             }
         }
 
+
+        private bool _autoRefresh;
+        public bool AutoRefresh
+        {
+            get { return _autoRefresh; }
+            set
+            {
+                if (_autoRefresh == value) return;
+                _autoRefresh = value;
+                RaisePropertyChanged(() => AutoRefresh);
+            }
+        }
+
         public IMvxCommand SyncCommand
         {
             get
             {
-                return new MvxCommand(() =>
-                {
-                    RefreshData();
-                });
+                return new MvxCommand(RefreshData, () => AutoRefresh);
             }
         }
 
