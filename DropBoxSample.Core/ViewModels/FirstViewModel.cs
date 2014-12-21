@@ -16,10 +16,12 @@ namespace DropBoxSample.Core.ViewModels
         private string DropboxSyncKey = "uhzc6l5g0he31la";
         private string DropboxSyncSecret = "eb961wew2q9y2yz";
         private IMvxDBDataStore _dataStore;
+        IMvxDBTable<Item> _table;
 
         public FirstViewModel()
         {
             _dataStore = Mvx.Resolve<IMvxDBDataStore>();
+            _table = _dataStore.GetTable<Item>();
             Items = new ObservableCollection<ItemViewModel>();
             var messenger = Mvx.Resolve<IMvxMessenger>();
             messenger.Subscribe<DrbxReceivedMessage<Item>>(m =>
@@ -109,6 +111,7 @@ namespace DropBoxSample.Core.ViewModels
                 return new MvxCommand(() =>
                 {
                     var item = new Item() { Id = Guid.NewGuid().ToString(), Value = "new" };
+                    _table.AddOrUpdate(item);
                     var itemVM = new ItemViewModel(item, this, _dataStore);
                     Items.Add(itemVM);
                     RaisePropertyChanged(() => Items);
