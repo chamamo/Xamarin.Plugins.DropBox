@@ -74,8 +74,17 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             return dictionary;
         }
 
+        public static MvxDBRecord ToMvxDBRecord(this DBRecord record)
+        {
+            var map = MvxDBMapping.Get(record.Table.Id);
+            return new MvxDBRecord(record);
+        }
+
         public static DBFields ToDBFields(this Dictionary<string, object> dictionary)
         {
+
+
+
             var dbFields = new DBFields();
             foreach (var kpv in dictionary)
            {

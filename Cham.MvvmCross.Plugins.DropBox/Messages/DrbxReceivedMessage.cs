@@ -9,22 +9,12 @@ namespace Cham.MvvmCross.Plugins.DropBox.Messages
 {
     public class DrbxReceivedMessage<TEntityType> : MvxMessage
     {
-        public readonly Dictionary<string, object>  Changes;
-        public readonly bool IsDeleted;
-        public readonly string Id;
+        public readonly IMvxDBRecord Record;
 
-        public DrbxReceivedMessage(object sender, string id, bool isDeleted)
+        public DrbxReceivedMessage(object sender, IMvxDBRecord record)
             : base(sender)
         {
-            Id = id;
-            IsDeleted = isDeleted;
-        }
-
-        public DrbxReceivedMessage(object sender, string id, Dictionary<string, object> changes)
-            : base(id)
-        {
-            Id = id;
-            Changes = changes;
+            Record = record;
         }
     }
 }

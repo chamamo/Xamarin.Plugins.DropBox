@@ -23,7 +23,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             DBTable = table;
         }
 
-        public override IEnumerable<Dictionary<string, object>> Query(Dictionary<string, object> query = null)
+        public override IEnumerable<IMvxDBRecord> Query(Dictionary<string, object> query = null)
         {
             DropboxSync.Android.DBTable.QueryResult result = null;
             if (query == null)
@@ -35,10 +35,10 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
                 var dbFields = query.ToDBFields();
                 result = DBTable.Query(dbFields);
             }
-           foreach (var record in result.AsList())
-           {
-               yield return record.ToDictionary(MvxDBMapping.Get<T>());
-           }
+            foreach (var record in result.AsList())
+            {
+                yield return record.ToMvxDBRecord();
+            }
         }
 
         public override void AddOrUpdate(T entity, string id, bool autoSync = true)

@@ -37,6 +37,6 @@ namespace Cham.MvvmCross.Plugins.DropBox
             Delete(entity, value.ToString(), autoSync);
         }
 
-        public abstract IEnumerable<Dictionary<string, object>> Query(Dictionary<string, object> query = null);
+        public abstract IEnumerable<IMvxDBRecord> Query(Dictionary<string, object> query = null);
     }
 }

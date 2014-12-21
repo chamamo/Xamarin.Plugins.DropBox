@@ -43,10 +43,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
                     var makeme = messageType.MakeGenericType(typeArgs);
                     foreach (var record in change.Value)
                     {
-
-                        var m = (record.IsDeleted ? 
-                            Activator.CreateInstance(makeme, this, record.Id, true) : 
-                            Activator.CreateInstance(makeme, this, record.Id, record.ToDictionary(map))) as MvxMessage;
+                        var m = Activator.CreateInstance(makeme, this, record.ToMvxDBRecord()) as MvxMessage;
                         messenger.Publish(m, makeme);
                     }
                 }

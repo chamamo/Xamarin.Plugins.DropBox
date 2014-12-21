@@ -83,6 +83,7 @@
     <Compile Include="Bootstrap\MessengerPluginBootstrap.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="MvxDBDataStore.cs" />
+    <Compile Include="MvxDBRecord.cs" />
     <Compile Include="MvxDBTable.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

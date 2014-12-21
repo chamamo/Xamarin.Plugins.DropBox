@@ -24,8 +24,8 @@ namespace DropBoxSample.Core.ViewModels
             var messenger = Mvx.Resolve<IMvxMessenger>();
             messenger.Subscribe<DrbxReceivedMessage<Item>>(m =>
             {
-                var itemVM = Items.SingleOrDefault(vm => vm.Model.Id == m.Id);
-                if (m.IsDeleted)
+                var itemVM = Items.SingleOrDefault(vm => vm.Model.Id == m.Record.Id);
+                if (m.Record.IsDeleted)
                 {
                     if (itemVM != null)
                     {
@@ -37,13 +37,13 @@ namespace DropBoxSample.Core.ViewModels
                     if (itemVM != null)
                     {
                         var model = itemVM.Model;
-                        m.Changes.Populate<Item>(ref model);
+                        m.Record.Populate<Item>(ref model);
                         itemVM.Model = model;
                     }
                     else
                     {
                         var model = new Item();
-                        m.Changes.Populate<Item>(ref model);
+                        m.Record.Populate<Item>(ref model);
                         Items.Add(new ItemViewModel(model, this, _dataStore));
                         if (Items.Count == 1 && SelectedItem == null) SelectedItem = Items[0];
                     }

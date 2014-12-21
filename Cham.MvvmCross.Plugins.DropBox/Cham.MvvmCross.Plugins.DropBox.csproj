@@ -41,6 +41,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="IMvxDBDataStore.cs" />
     <Compile Include="IMvxDBEntity.cs" />
+    <Compile Include="IMxvDBRecord.cs" />
     <Compile Include="Messages\DrbxReceivedMessage.cs" />
     <Compile Include="MvxDBDataStoreBase.cs" />
     <Compile Include="MvxDBKeyAttribute.cs" />

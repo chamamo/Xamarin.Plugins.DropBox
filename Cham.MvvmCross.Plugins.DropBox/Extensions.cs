@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cirrious.CrossCore;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,25 +11,42 @@ namespace Cham.MvvmCross.Plugins.DropBox
     public static class Extensions
     {
 
-        public static bool Populate<T>(this Dictionary<string, object> dic, ref T entityToPopulate) where T : IMvxDBEntity
+        public static bool Populate<T>(this IMvxDBRecord record, ref T entityToPopulate) where T : IMvxDBEntity
         {
             var map = MvxDBMapping.Get(typeof(T));
             if (map == null || map.PropertiesInfos == null || map.PropertiesInfos.Count == 0) return false;
             var result = false;
-            foreach (var kpv in dic)
+            foreach (var fieldName in record.FieldNames)
             {
-                var property = map.PropertiesInfos.FirstOrDefault(p => p.Name == kpv.Key);
+                var property = map.PropertiesInfos.FirstOrDefault(p => p.Name == fieldName);
                 if (property != null)
                 {
                     var oldValue = property.GetValue(entityToPopulate);
-                    if (oldValue != kpv.Value)
+                    var value = record[fieldName];
+                    if (oldValue != value)
                     {
-                        property.SetValue(entityToPopulate, kpv.Value);
+                        property.SetValue(entityToPopulate, value);
                         result = true;
                     }
                 }
             }
             return result;
+        }
+
+        public static IMvxDBRecord GetMvxDBRecord<TEntityType>(this TEntityType entity) where TEntityType : IMvxDBEntity
+        {
+            if (entity == null) return null;
+            var map = MvxDBMapping.Get(entity.GetType());
+            if (map == null || map.PropertiesInfos == null || map.PropertiesInfos.Count == 0) return null;
+            var fields = Mvx.Resolve<IMvxDBRecord>();
+            foreach (var property in map.PropertiesInfos)
+            {
+                var value = property.GetValue(entity);
+                if (value == null) continue;
+                fields[property.Name] = value;        
+            }
+            return fields;
+
         }
 
         public static T ConvertValue<T>(this object value)
