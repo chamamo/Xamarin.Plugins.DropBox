@@ -21,12 +21,18 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
 
         public static DateTime ToDateTime(this Date date)
         {
-            return UnixEpoch + TimeSpan.FromMilliseconds(date.Time);
+            try
+            {
+                DateTime ddd = UnixEpoch.AddMilliseconds(date.Time);
+                DateTime final = ddd.ToUniversalTime();
+                return final;
+            }
+            catch { return DateTime.Now; }
         }
 
         public static Date ToDate(this DateTime dateTime)
         {
-            return new Date(dateTime.Ticks - UnixEpoch.Ticks);
+            return new Date(Convert.ToInt64((dateTime.ToUniversalTime() - UnixEpoch).TotalMilliseconds));
         }
         
         public static DBFields GetDBFields<TEntityType>(this TEntityType entity) where TEntityType : IMvxDBEntity

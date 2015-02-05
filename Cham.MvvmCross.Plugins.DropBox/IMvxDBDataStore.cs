@@ -12,6 +12,8 @@ namespace Cham.MvvmCross.Plugins.DropBox
     {
         bool HasLinkedAccount { get; }
 
+        void Unlink();
+
         IMvxDBTable<T> GetTable<T>(string tableName) where T : IMvxDBEntity;
 
         IMvxDBTable<T> GetTable<T>() where T : IMvxDBEntity;
@@ -19,6 +21,8 @@ namespace Cham.MvvmCross.Plugins.DropBox
         void Init(string appKey, string appSecret);
 
         void Sync();
+
+        void Delete();
     }
 
     public interface IMvxDBTable<T> where T : IMvxDBEntity
@@ -32,6 +36,8 @@ namespace Cham.MvvmCross.Plugins.DropBox
         IMvxDBRecord GetOrInsert(T entity, bool autoSync = true);
 
         void Delete(T entity, bool autoSync = true);
+
+        void Delete(IMvxDBRecord record, bool autoSync = true);
 
         IEnumerable<IMvxDBRecord> Query(Dictionary<string, object> query = null);
     }

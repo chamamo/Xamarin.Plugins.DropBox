@@ -23,7 +23,7 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
 
         private DBAccountManager Account { get; set; }
 
-        public override bool HasLinkedAccount { get { return Account!=null? Account.HasLinkedAccount : false; } }
+        public override bool HasLinkedAccount { get { return Account != null ? Account.HasLinkedAccount : false; } }
 
         private DBDatastore DropboxDatastore { get; set; }
 
@@ -50,6 +50,19 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             }
         }
 
+        public override void Delete()
+        {
+            if (DropboxDatastore != null && DropboxDatastore.IsOpen)
+            {
+                DropboxDatastore.Close();
+            }
+            DropboxDatastore.Manager.DeleteDatastore("default");
+        }
+
+        public override void Unlink()
+        {
+            if (Account != null) Account.Unlink();
+        }
 
         public override void Init(string appKey, string appSecret)
         {
@@ -57,16 +70,8 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             DropboxSyncSecret = appSecret;
             var activity = Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
             Account = DBAccountManager.GetInstance(activity.ApplicationContext, DropboxSyncKey, DropboxSyncSecret);
-            Account.LinkedAccountChanged += (sender, e) =>
-            {
-                if (!e.P1.IsLinked)
-                {
-                    Account.StartLink(activity, (int)RequestCode.LinkToDropboxRequest);
-                    return;
-                }
-                Account = e.P0;
-                StartApp(e.P1);
-            };
+            Account.LinkedAccountChanged -= LinkedAccountChanged;
+            Account.LinkedAccountChanged += LinkedAccountChanged;
             // TODO: Restart auth flow.
             if (!Account.HasLinkedAccount)
             {
@@ -76,6 +81,18 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             {
                 StartApp();
             }
+        }
+
+        private void LinkedAccountChanged(object sender, DBAccountManager.AccountChangedEventArgs e)
+        {
+            var activity = Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
+            if (!e.P1.IsLinked)
+            {
+                Account.StartLink(activity, (int)RequestCode.LinkToDropboxRequest);
+                return;
+            }
+            Account = e.P0;
+            StartApp(e.P1);
         }
 
 
@@ -107,8 +124,6 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
         {
             InitializeDropbox(account);
             Sync();
-            //Monkeys = GetMonkeys();
-            //DrawMonkeys(Monkeys);
         }
         
         bool VerifyStore()
@@ -149,98 +164,4 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             return GetTable<T>(typeof(T).Name);
         }
     }
-
-
-
-    //public interface IMvxDBTable
-    //{
-    //    IMvxDBRecord GetOrInsert(string id, DBFields fields = null);
-    //}
-
-    //public class MvxDBTable : IMvxDBTable
-    //{
-    //    private readonly DBTable DBTable;
-
-    //    public MvxDBTable(DBTable dbTable)
-    //    {
-    //        DBTable = dbTable;
-    //    }
-
-    //    public IMvxDBRecord GetOrInsert(string id, IMvxDBFields fields = null)
-    //    {
-
-    //        return new MvxDBRecord(DBTable.GetOrInsert(id, (DBFields)fields));
-    //    }
-    //}
-
-    //public interface IMvxDBFields
-    //{
-    //    IMvxDBFields DeleteField(string name);
-    //}
-
-    //public class MvxDBFields : IMvxDBFields
-    //{
-    //    private readonly DBFields DBFields;
-
-    //    public MvxDBFields(DBFields dbFields)
-    //    {
-    //        DBFields = dbFields;
-    //    }
-
-    //    public IMvxDBFields DeleteField(string name)
-    //    {
-    //        return new MvxDBFields(DBFields.DeleteField(name));
-    //    }
-
-    //    public ICollection<string> FieldNames()
-    //    {
-    //        return DBFields.FieldNames();
-    //    }
-
-    //    public bool GetBoolean(string name) 
-    //    {
-    //        return DBFields.GetBoolean(name);
-    //    }
-
-    //    public byte[] GetBytes(string name)
-    //    {
-    //        return DBFields.GetBytes(name);
-    //    }
-
-    //    public DateTime GetDate(string name)
-    //    {
-    //        return DBFields.GetDate(name);
-    //    }
-
-    //    public bool GetBoolean(string name)
-    //    {
-    //        return DBFields.GetBoolean(name);
-    //    }
-
-    //    public bool GetBoolean(string name)
-    //    {
-    //        return DBFields.GetBoolean(name);
-    //    }
-
-    //}
-    //public interface IMvxDBRecord : IMvxDBFields
-    //{
-    //    bool IsDeleted { get; }
-
-    //    bool IsValidId(string id);
-
-    //    bool IsValidFieldName(string id);
-    //}
-
-    //public class MvxDBRecord : MvxDBFields, IMvxDBRecord
-    //{
-    //    private readonly DBRecord DBRecord;
-
-    //    public MvxDBRecord(DBRecord dbRecord) : base(dbRecord)
-    //    {
-    //        DBRecord = dbRecord;
-    //    }
-
-    //    public virtual bool IsDeleted { get { return DBRecord.IsDeleted; } }
-    //}
 }

@@ -15,6 +15,8 @@ namespace Cham.MvvmCross.Plugins.DropBox
     {
         public abstract bool HasLinkedAccount { get; }
 
+        public abstract void Unlink();
+
         public abstract IMvxDBTable<T> GetTable<T>(string tableName) where T : IMvxDBEntity;
 
         public abstract IMvxDBTable<T> GetTable<T>() where T : IMvxDBEntity;
@@ -22,5 +24,7 @@ namespace Cham.MvvmCross.Plugins.DropBox
         public abstract void Init(string appKey, string appSecret);
         
         public abstract void Sync();
+
+        public abstract void Delete();
     }
 }

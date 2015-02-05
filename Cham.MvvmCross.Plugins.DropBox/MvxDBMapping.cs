@@ -24,7 +24,7 @@ namespace Cham.MvvmCross.Plugins.DropBox
 
             var query = RuntimeReflectionExtensions.GetRuntimeProperties(type);
             PropertyInfoKey = query.FirstOrDefault(p => p.GetCustomAttribute<MvxDBKeyAttribute>(true) != null);
-            query = query.Where(p => p.CanRead && p.CanWrite && p.GetCustomAttribute<MvxDBIgnoreAttribute>(true) == null);
+            query = query.Where(p => p.CanRead && p.CanWrite && p.GetCustomAttribute<MvxDBIgnoreAttribute>(true) == null && p.GetCustomAttribute<MvxDBKeyAttribute>(true) == null);
             PropertiesInfos = query.ToList();
         }
 

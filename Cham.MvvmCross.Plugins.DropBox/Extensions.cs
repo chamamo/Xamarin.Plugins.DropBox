@@ -16,6 +16,14 @@ namespace Cham.MvvmCross.Plugins.DropBox
             var map = MvxDBMapping.Get(typeof(T));
             if (map == null || map.PropertiesInfos == null || map.PropertiesInfos.Count == 0) return false;
             var result = false;
+            //Property Key
+            var keyValue = map.PropertyInfoKey.GetValue(entityToPopulate) as string;
+            if (keyValue != record.Id)
+            {
+                map.PropertyInfoKey.SetValue(entityToPopulate, record.Id);
+                result = true;
+            }
+            //Others
             foreach (var fieldName in record.FieldNames)
             {
                 var property = map.PropertiesInfos.FirstOrDefault(p => p.Name == fieldName);
@@ -25,7 +33,8 @@ namespace Cham.MvvmCross.Plugins.DropBox
                     var value = record[fieldName];
                     if (oldValue != value)
                     {
-                        property.SetValue(entityToPopulate, value);
+
+                        property.SetValue(entityToPopulate, value.ConvertValue(property.PropertyType));
                         result = true;
                     }
                 }
@@ -33,12 +42,25 @@ namespace Cham.MvvmCross.Plugins.DropBox
             return result;
         }
 
+        public static void UpdateFrom<T>(this IMvxDBRecord record, T sourceEntity) where T : IMvxDBEntity
+        {
+            if (sourceEntity == null) return;
+            var map = MvxDBMapping.Get(sourceEntity.GetType());
+            if (map == null || map.PropertiesInfos == null || map.PropertiesInfos.Count == 0) return;
+            foreach (var property in map.PropertiesInfos)
+            {
+                var value = property.GetValue(sourceEntity);
+                if (value == null) continue;
+                if (record[property.Name] != value) record[property.Name] = value;
+            }
+        }
+
         public static IMvxDBRecord GetMvxDBRecord<TEntityType>(this TEntityType entity) where TEntityType : IMvxDBEntity
         {
+            var fields = Mvx.Resolve<IMvxDBRecord>();
             if (entity == null) return null;
             var map = MvxDBMapping.Get(entity.GetType());
             if (map == null || map.PropertiesInfos == null || map.PropertiesInfos.Count == 0) return null;
-            var fields = Mvx.Resolve<IMvxDBRecord>();
             foreach (var property in map.PropertiesInfos)
             {
                 var value = property.GetValue(entity);
@@ -52,6 +74,11 @@ namespace Cham.MvvmCross.Plugins.DropBox
         public static T ConvertValue<T>(this object value)
         {
             return (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        public static object ConvertValue(this object value, Type destinationType)
+        {
+            return Convert.ChangeType(value, destinationType);
         }
 
         public static bool IsNumeric(this object value)

@@ -39,6 +39,12 @@ namespace Cham.MvvmCross.Plugins.DropBox
             Delete(entity, value.ToString(), autoSync);
         }
 
+        public void Delete(IMvxDBRecord record, bool autoSync = true)
+        {
+            record.DeleteRecord();
+            if (autoSync) Store.Sync();
+        }
+
         public abstract IEnumerable<IMvxDBRecord> Query(Dictionary<string, object> query = null);
     }
 }
