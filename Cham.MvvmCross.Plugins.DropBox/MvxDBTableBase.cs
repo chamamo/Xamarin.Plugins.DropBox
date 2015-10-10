@@ -8,7 +8,7 @@ namespace Cham.MvvmCross.Plugins.DropBox
 {
     public abstract class MvxDBTableBase<T> : IMvxDBTable<T> where T : IMvxDBEntity
     {
-        protected IMvxDBDataStore Store;
+        public readonly IMvxDBDataStore Store;
 
         protected MvxDBTableBase(IMvxDBDataStore store)
         {

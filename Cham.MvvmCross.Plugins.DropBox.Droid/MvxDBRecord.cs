@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -13,123 +11,32 @@ using DropboxSync.Android;
 
 namespace Cham.MvvmCross.Plugins.DropBox.Droid
 {
-    public class MvxDBRecord : MvxDBRecordBase, IMvxDBRecord
+    public class MvxDBRecord : MvxDBFields<DBRecord>, IMvxDBRecord
     {
-        private readonly DBFields DBFields;
-
-        public MvxDBRecord()
+        public MvxDBRecord(DBRecord dbField)
+            : base(dbField)
         {
-            DBFields = new DBFields();
         }
 
-        public MvxDBRecord(DBFields dbField)
-        {
-            DBFields = dbField;
-        }
-
-        public override string Id
+        public string Id
         {
             get
             {
-                if (DBFields is DBRecord) return ((DBRecord)DBFields).Id;
-                return null;
+                return InternalDbFields.Id;
             }
         }
 
-        public override bool IsDeleted
+        public bool IsDeleted
         {
             get
             {
-                if (DBFields is DBRecord) return ((DBRecord)DBFields).IsDeleted;
-                return false;
+                return InternalDbFields.IsDeleted;
             }
         }
 
-        public override void DeleteRecord()
+        public void DeleteRecord()
         {
-            if (DBFields is DBRecord) ((DBRecord)DBFields).DeleteRecord();
-        }
-
-        public override ICollection<string> FieldNames
-        {
-            get { return DBFields.FieldNames(); }
-        }
-
-
-
-        public override object this[string fieldName]
-        {
-            get
-            {
-                var type = DBFields.GetFieldType(fieldName);
-                if (type == (DBFields.ValueType.Boolean))
-                {
-                    return DBFields.GetBoolean(fieldName);
-                }
-                else if (type == (DBFields.ValueType.Date))
-                {
-                    var date = DBFields.GetDate(fieldName);
-                    return date.ToDateTime();
-                }
-                else if (type == (DBFields.ValueType.Double))
-                {
-                    return DBFields.GetDouble(fieldName);
-                }
-                else if (type == (DBFields.ValueType.List))
-                {
-                    throw new NotImplementedException();
-                }
-                else if (type == (DBFields.ValueType.Long))
-                {
-                    return DBFields.GetLong(fieldName);
-                }
-                else if (type == (DBFields.ValueType.String))
-                {
-                    return DBFields.GetString(fieldName);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-
-            }
-            set
-            {
-                var type = DBFields.GetFieldType(fieldName);
-                if (type == (DBFields.ValueType.Boolean))
-                {
-                    DBFields.Set(fieldName, (bool)value);
-                }
-                else if (type == (DBFields.ValueType.Date))
-                {
-                   DBFields.Set(fieldName, ((DateTime)value).ToDate());
-                }
-                else if (type == (DBFields.ValueType.Double))
-                {
-                    DBFields.Set(fieldName, value.ConvertValue<double>());
-                }
-                else if (type == (DBFields.ValueType.List))
-                {
-                    throw new NotImplementedException();
-                }
-                else if (type == (DBFields.ValueType.Long))
-                {
-                    DBFields.Set(fieldName, value.ConvertValue<long>());
-                }
-                else if (type == (DBFields.ValueType.String))
-                {
-                    DBFields.Set(fieldName, value as string);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-        }
-
-        public override void DeleteField(string fieldName)
-        {
-            DBFields.DeleteField(fieldName);
+            InternalDbFields.DeleteRecord();
         }
 
     }

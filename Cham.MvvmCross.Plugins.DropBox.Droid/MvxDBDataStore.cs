@@ -16,18 +16,33 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
         LinkToDropboxRequest
     }
 
-    public class MvxDBDataStore : MvxDBDataStoreBase, IMvxDBDataStore
+    public class MvxDBDataStore : IMvxDBDataStore
     {
-        private string DropboxSyncKey;
-        private string DropboxSyncSecret;
+        private string _dropboxSyncKey;
+        private string _dropboxSyncSecret;
 
         private DBAccountManager Account { get; set; }
 
-        public override bool HasLinkedAccount { get { return Account != null ? Account.HasLinkedAccount : false; } }
+        public bool HasLinkedAccount { get { return Account != null && Account.HasLinkedAccount; } }
 
         private DBDatastore DropboxDatastore { get; set; }
 
-        public override void Sync()
+        public long Size
+        {
+            get { return DropboxDatastore.Size; }
+        }
+
+        public long UnsyncedChangesSize
+        {
+            get { return DropboxDatastore.UnsyncedChangesSize; }
+        }
+
+        public long RecordCount
+        {
+            get { return DropboxDatastore.RecordCount; }
+        }
+
+        public void Sync()
         {
             if (DropboxDatastore == null) return;
             var changes = DropboxDatastore.Sync();
@@ -50,26 +65,26 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
             }
         }
 
-        public override void Delete()
+        public void Delete()
         {
             if (DropboxDatastore != null && DropboxDatastore.IsOpen)
             {
                 DropboxDatastore.Close();
+                DropboxDatastore.Manager.DeleteDatastore("default");
             }
-            DropboxDatastore.Manager.DeleteDatastore("default");
         }
 
-        public override void Unlink()
+        public void Unlink()
         {
             if (Account != null) Account.Unlink();
         }
 
-        public override void Init(string appKey, string appSecret)
+        public void Init(string appKey, string appSecret)
         {
-            DropboxSyncKey = appKey;
-            DropboxSyncSecret = appSecret;
+            _dropboxSyncKey = appKey;
+            _dropboxSyncSecret = appSecret;
             var activity = Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
-            Account = DBAccountManager.GetInstance(activity.ApplicationContext, DropboxSyncKey, DropboxSyncSecret);
+            Account = DBAccountManager.GetInstance(activity.ApplicationContext, _dropboxSyncKey, _dropboxSyncSecret);
             Account.LinkedAccountChanged -= LinkedAccountChanged;
             Account.LinkedAccountChanged += LinkedAccountChanged;
             // TODO: Restart auth flow.
@@ -154,12 +169,12 @@ namespace Cham.MvvmCross.Plugins.DropBox.Droid
                 Account.StartLink(Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity, (int)RequestCode.LinkToDropboxRequest);
         }
 
-        public override IMvxDBTable<T> GetTable<T>(string tableName)
+        public IMvxDBTable<T> GetTable<T>(string tableName) where T : IMvxDBEntity
         {
             return new MvxDBTable<T>(DropboxDatastore.GetTable(tableName), this);
         }
 
-        public override IMvxDBTable<T> GetTable<T>()
+        public IMvxDBTable<T> GetTable<T>() where T : IMvxDBEntity
         {
             return GetTable<T>(typeof(T).Name);
         }

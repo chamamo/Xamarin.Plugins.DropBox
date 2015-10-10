@@ -12,6 +12,12 @@ namespace Cham.MvvmCross.Plugins.DropBox
     {
         bool HasLinkedAccount { get; }
 
+        long Size { get; }
+
+        long UnsyncedChangesSize { get; }
+
+        long RecordCount { get; }
+
         void Unlink();
 
         IMvxDBTable<T> GetTable<T>(string tableName) where T : IMvxDBEntity;
