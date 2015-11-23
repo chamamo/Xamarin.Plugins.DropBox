@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>Cham.MvvmCross.Plugins.DropBox</id>
-		<version>1.0.0.4</version>
+		<version>1.0.1</version>
 		<title>Cham.MvvmCross.Plugins.DropBox</title>
 		<authors>mch</authors>
 		<owners>Mourad CHAMA</owners>
@@ -26,6 +26,9 @@
 		<file src="..\Cham.MvvmCross.Plugins.DropBox.Droid\bin\Release\Cham.MvvmCross.Plugins.DropBox.Droid.dll" target="lib\MonoAndroid\Cham.MvvmCross.Plugins.DropBox.Droid.dll" />
 		<file src="..\Cham.MvvmCross.Plugins.DropBox.Droid\bin\Release\Cham.MvvmCross.Plugins.DropBox.Droid.pdb" target="lib\MonoAndroid\Cham.MvvmCross.Plugins.DropBox.Droid.pdb" />
 		<file src="..\lib\android\DropboxSync.Android.dll" target="lib\MonoAndroid\DropboxSync.Android.dll" />
+		
+		<file src="..\Cham.MvvmCross.Plugins.DropBox\bin\Release\Cham.MvvmCross.Plugins.DropBox.dll" target="lib\portable-win81+wpa81\Cham.MvvmCross.Plugins.DropBox.dll" />
+		<file src="..\Cham.MvvmCross.Plugins.DropBox\bin\Release\Cham.MvvmCross.Plugins.DropBox.pdb" target="lib\portable-win81+wpa81\Cham.MvvmCross.Plugins.DropBox.pdb" />
 		
 		<file src="..\Cham.MvvmCross.Plugins.DropBox\bin\Release\Cham.MvvmCross.Plugins.DropBox.dll" target="lib\portable-win+net45+wp8+win8+wpa81+MonoTouch+MonoAndroid\Cham.MvvmCross.Plugins.DropBox.dll" />
 		<file src="..\Cham.MvvmCross.Plugins.DropBox\bin\Release\Cham.MvvmCross.Plugins.DropBox.pdb" target="lib\portable-win+net45+wp8+win8+wpa81+MonoTouch+MonoAndroid\Cham.MvvmCross.Plugins.DropBox.pdb" />
