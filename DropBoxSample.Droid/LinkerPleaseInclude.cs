@@ -2,7 +2,8 @@ using System.Collections.Specialized;
 using System.Windows.Input;
 using Android.Views;
 using Android.Widget;
-using Cirrious.MvvmCross.Droid.Views;
+using MvvmCross.Droid.Views;
+using MvvmCross.Platform.IoC;
 
 namespace DropBoxSample.Droid
 {
@@ -67,9 +68,9 @@ namespace DropBoxSample.Droid
             command.CanExecuteChanged += (s, e) => { if (command.CanExecute(null)) command.Execute(null); };
         }
 		
-		public void Include(Cirrious.CrossCore.IoC.MvxPropertyInjector injector)
+		public void Include(MvxPropertyInjector injector)
 		{
-			injector = new Cirrious.CrossCore.IoC.MvxPropertyInjector ();
+			injector = new MvxPropertyInjector ();
 		} 
 
 		public void Include(System.ComponentModel.INotifyPropertyChanged changed)

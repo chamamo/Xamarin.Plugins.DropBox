@@ -1,9 +1,9 @@
-using Cirrious.CrossCore.Plugins;
+using MvvmCross.Platform.Plugins;
 
 namespace DropBoxSample.Droid.Bootstrap
 {
     public class VisibilityPluginBootstrap
-        : MvxPluginBootstrapAction<Cirrious.MvvmCross.Plugins.Visibility.PluginLoader>
+        : MvxPluginBootstrapAction<MvvmCross.Plugins.Visibility.PluginLoader>
     {
     }
 }

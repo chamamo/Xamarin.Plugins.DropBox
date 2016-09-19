@@ -1,7 +1,8 @@
 using Android.App;
 using Android.OS;
-using Cirrious.MvvmCross.Droid.Views;
 using DropBoxSample.Core.ViewModels;
+using MvvmCross.Droid.Views;
+using Xamarin.Plugins.DropBox;
 
 namespace DropBoxSample.Droid.Views
 {
@@ -10,6 +11,7 @@ namespace DropBoxSample.Droid.Views
     {
         protected override void OnCreate(Bundle bundle)
         {
+            var act = Xamarin.Plugins.DropBox.Helper.GetCurrentActivity();
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.FirstView);
         }

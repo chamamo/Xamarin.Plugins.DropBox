@@ -9,8 +9,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Cirrious.CrossCore.Converters;
 using System.Globalization;
+using MvvmCross.Platform.Converters;
 
 namespace DropBoxSample.Droid.Converters
 {

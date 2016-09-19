@@ -1,89 +1,41 @@
-using Cham.MvvmCross.Plugins.DropBox;
-using Cham.MvvmCross.Plugins.DropBox.Messages;
-using Cirrious.CrossCore;
-using Cirrious.MvvmCross.Plugins.Messenger;
-using Cirrious.MvvmCross.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Input;
+using MvvmCross.Core.ViewModels;
+using MvvmCross.Platform;
+using Xamarin.Plugins.DropBox;
+using Xamarin.Plugins.DropBox.Abstractions;
 
 namespace DropBoxSample.Core.ViewModels
 {
     public class FirstViewModel 
 		: MvxViewModel
     {
-        private string DropboxSyncKey = "uhzc6l5g0he31la";
-        private string DropboxSyncSecret = "eb961wew2q9y2yz";
-        private IMvxDBDataStore _dataStore;
+        private const string DropboxSyncKey = "k9hhmzy4j60y8hm";
+        private const string DropboxSyncSecret = "gbntl1z7d5fdu5j";
+        private readonly IDbDataStore _dataStore;
 
         public FirstViewModel()
         {
-            _dataStore = Mvx.Resolve<IMvxDBDataStore>();
             Items = new ObservableCollection<ItemViewModel>();
-            var messenger = Mvx.Resolve<IMvxMessenger>();
-            messenger.Subscribe<DrbxReceivedMessage<Item>>(m =>
-            {
-                var itemVM = Items.SingleOrDefault(vm => vm.Model.Id == m.Record.Id);
-                if (m.Record.IsDeleted)
-                {
-                    if (itemVM != null)
-                    {
-                        Items.Remove(itemVM);
-                    }
-                }
-                else
-                {
-                    if (itemVM != null)
-                    {
-                        var model = itemVM.Model;
-                        m.Record.Populate<Item>(ref model);
-                        itemVM.Model = model;
-                        itemVM.RaiseAllPropertiesChanged();
-                        if (SelectedItem != null && SelectedItem.Model.Id == model.Id) SelectedItem.RaiseAllPropertiesChanged();
-                    }
-                    else
-                    {
-                        var model = new Item();
-                        m.Record.Populate<Item>(ref model);
-                        Items.Add(new ItemViewModel(model, this, _dataStore));
-                        if (Items.Count == 1 && SelectedItem == null) SelectedItem = Items[0];
-                    }
-                }
-            });
+            _dataStore = CrossDbDataStore.Current;
+            _dataStore.InitMapping(typeof(Item).GetTypeInfo().Assembly);
+            _dataStore.DbRecordChanged += DbRecordChanged;
         }
+        
+        private IDbTable<Item> Table => _dataStore.GetTable<Item>();
+        
 
-        IMvxDBTable<Item> _table;
-        private IMvxDBTable<Item> Table
+        public ICommand ConnectCommand => new MvxCommand(() =>
         {
-            get
-            {
-                if (_table == null) _table = _dataStore.GetTable<Item>();
-                return _table;
-            }
-        }
+            _dataStore.Init(DropboxSyncKey, DropboxSyncSecret);
+            RaisePropertyChanged(() => Online);
+            RefreshData();
+        });
 
-        private ICommand _connectCommand;
-        public ICommand ConnectCommand
-        {
-            get
-            {
-                return _connectCommand ?? (_connectCommand = new MvxCommand(() =>
-                {
-                    _dataStore.Init(DropboxSyncKey, DropboxSyncSecret);
-                    RaisePropertyChanged(() => Online);
-                    RefreshData();
-                }));
-            }
-        }
-
-        public bool Online
-        {
-            get
-            {
-                return _dataStore.HasLinkedAccount;
-            }
-        }
+        public bool Online => _dataStore.HasLinkedAccount;
 
 
         private bool _autoSync;
@@ -98,48 +50,17 @@ namespace DropBoxSample.Core.ViewModels
             }
         }
 
-        public IMvxCommand SyncCommand
-        {
-            get
-            {
-                return new MvxCommand(RefreshData);
-            }
-        }
+        public IMvxCommand SyncCommand => new MvxCommand(RefreshData);
 
-        private void RefreshData()
+        public IMvxCommand AddCommand => new MvxCommand(() =>
         {
-            if (_dataStore.HasLinkedAccount)
-            {
-                Items.Clear();
-                var results = Table.Query();
-                if (results != null)
-                {
-                    foreach (var result in results)
-                    {
-                        Item item = new Item();
-                        result.Populate<Item>(ref item);
-                        Items.Add(new ItemViewModel(item, this, _dataStore));
-                    }
-                }
-                _dataStore.Sync();
-            }
-        }
-
-        public IMvxCommand AddCommand
-        {
-            get
-            {
-                return new MvxCommand(() =>
-                {
-                    var item = new Item() { Id = Guid.NewGuid().ToString(), Value = "new" };
-                    Table.GetOrInsert(item, AutoSync);
-                    var itemVM = new ItemViewModel(item, this, _dataStore);
-                    Items.Add(itemVM);
-                    RaisePropertyChanged(() => Items);
-                    SelectedItem = itemVM;
-                });
-            }
-        }
+            var item = new Item() {Id = Guid.NewGuid().ToString(), Value = "new"};
+            Table.GetOrInsert(item, AutoSync);
+            var itemVM = new ItemViewModel(item, this, _dataStore);
+            Items.Add(itemVM);
+            RaisePropertyChanged(() => Items);
+            SelectedItem = itemVM;
+        });
 
         private ObservableCollection<ItemViewModel> _items;
         public ObservableCollection<ItemViewModel> Items
@@ -173,81 +94,54 @@ namespace DropBoxSample.Core.ViewModels
             RaisePropertyChanged(() => Online);
             RefreshData();
         }
-    }
 
-    public class ItemViewModel : MvxViewModel
-    {
-        private IMvxDBDataStore dataStore;
-        private IMvxDBTable<Item> _table;
-        private readonly FirstViewModel Parent;
-
-        public ItemViewModel(Item model, FirstViewModel parent, IMvxDBDataStore dataStore)
+        private void RefreshData()
         {
-            Model = model;
-            Parent = parent;
-            this.dataStore = dataStore;
-        }
-
-        private IMvxDBTable<Item> Table
-        {
-            get
+            if (_dataStore.HasLinkedAccount)
             {
-                if (_table == null) _table = dataStore.GetTable<Item>();
-                return _table;
-            }
-        }
-
-        public Item Model { get; set; }
-
-        private bool _checked;
-        public bool Checked
-        {
-            get { return _checked; }
-            set
-            {
-                if (_checked == value) return;
-                _checked = value;                
-                RaisePropertyChanged(() => Checked);               
-            }
-        }
-
-        public string Value
-        {
-            get { return Model.Value; }
-            set
-            {
-                if (Model.Value == value) return;
-                Model.Value = value;
-                RaisePropertyChanged(() => Value);
-                var record = Table.Get(Model.Id);
-                record["Value"] = value;
-                if (Parent.AutoSync) dataStore.Sync();
-            }
-        }
-
-        public ICommand DeleteCommand
-        {
-            get
-            {
-                return new MvxCommand(() =>
+                Items.Clear();
+                var results = Table.Query();
+                if (results != null)
+                {
+                    foreach (var result in results)
                     {
-                        bool isSelected = Parent.SelectedItem.Model.Id == Model.Id;
-                        Table.Delete(Model);
-                        Parent.Items.Remove(this);
-                        if (isSelected && Parent.Items.Count > 0) Parent.SelectedItem = Parent.Items[0];
-                    });
+                        Item item = new Item();
+                        result.Populate<Item>(ref item);
+                        Items.Add(new ItemViewModel(item, this, _dataStore));
+                    }
+                }
+                _dataStore.Sync();
             }
         }
-    }
 
-    public class Item : IMvxDBEntity
-    {
-        [MvxDBKey]
-        public string Id { get; set; }
-
-        public string Value { get; set; }
-
-        [MvxDBIgnore]
-        public bool Changed { get; set; }
+        private void DbRecordChanged(object sender, DbRecordChangedEventArgs e)
+        {
+            var itemVm = Items.SingleOrDefault(vm => vm.Model.Id == e.DbRecord.Id);
+            if (e.DbRecord.IsDeleted)
+            {
+                if (itemVm != null)
+                {
+                    Items.Remove(itemVm);
+                }
+            }
+            else
+            {
+                if (itemVm != null)
+                {
+                    var model = itemVm.Model;
+                    e.DbRecord.Populate<Item>(ref model);
+                    itemVm.Model = model;
+                    itemVm.RaiseAllPropertiesChanged();
+                    if (SelectedItem != null && SelectedItem.Model.Id == model.Id) SelectedItem.RaiseAllPropertiesChanged();
+                }
+                else
+                {
+                    var model = new Item();
+                    e.DbRecord.Populate<Item>(ref model);
+                    Items.Add(new ItemViewModel(model, this, _dataStore));
+                    if (Items.Count == 1 && SelectedItem == null) SelectedItem = Items[0];
+                }
+            }
+        }
     }
 }

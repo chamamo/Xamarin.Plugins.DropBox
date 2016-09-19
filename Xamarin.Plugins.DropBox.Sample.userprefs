@@ -1,0 +1,13 @@
+﻿<Properties StartupItem="DropBoxSample.Droid\DropBoxSample.Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.DropBoxSample.Droid PreferredExecutionTarget="Android.Android_Accelerated_x86_X86_google_apis" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="DropBoxSample.Droid\Views\FirstView.cs">
+    <Files>
+      <File FileName="DropBoxSample.Droid\Views\FirstView.cs" Line="14" Column="47" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+</Properties>

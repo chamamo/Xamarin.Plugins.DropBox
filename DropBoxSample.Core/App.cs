@@ -1,9 +1,11 @@
-using Cirrious.CrossCore.IoC;
 using System.Reflection;
+using MvvmCross.Core.ViewModels;
+using MvvmCross.Platform.IoC;
+using Xamarin.Plugins.DropBox;
 
 namespace DropBoxSample.Core
 {
-    public class App : Cirrious.MvvmCross.ViewModels.MvxApplication
+    public class App : MvxApplication
     {
         public override void Initialize()
         {
@@ -13,12 +15,6 @@ namespace DropBoxSample.Core
                 .RegisterAsLazySingleton();
 				
             RegisterAppStart<ViewModels.FirstViewModel>();
-        }
-        public override void LoadPlugins(Cirrious.CrossCore.Plugins.IMvxPluginManager pluginManager)
-        {
-            base.LoadPlugins(pluginManager);
-            Cham.MvvmCross.Plugins.DropBox.PluginLoader.Instance.EnsureLoaded();
-            Cham.MvvmCross.Plugins.DropBox.PluginLoader.Instance.InitMapping(GetType().GetTypeInfo().Assembly);
         }
     }
 }
